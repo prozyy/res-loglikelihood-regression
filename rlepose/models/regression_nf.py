@@ -7,6 +7,8 @@ from easydict import EasyDict
 from .builder import SPPE
 from .layers.real_nvp import RealNVP
 from .layers.Resnet import ResNet
+from .layers.hrnet import HighResolutionNet
+from .layers.hrnet_cfg_all import cfg_all
 
 
 def nets():
@@ -48,30 +50,42 @@ class RegressFlow(nn.Module):
         self.height_dim = self._preset_cfg['IMAGE_SIZE'][0]
         self.width_dim = self._preset_cfg['IMAGE_SIZE'][1]
 
-        self.preact = ResNet(f"resnet{cfg['NUM_LAYERS']}")
-
-        # Imagenet pretrain model
-        import torchvision.models as tm  # noqa: F401,F403
-        assert cfg['NUM_LAYERS'] in [18, 34, 50, 101, 152]
-        x = eval(f"tm.resnet{cfg['NUM_LAYERS']}(pretrained=True)")
-
         self.feature_channel = {
-            18: 512,
-            34: 512,
-            50: 2048,
-            101: 2048,
-            152: 2048
-        }[cfg['NUM_LAYERS']]
+            "resnet18": 512,
+            "resnet34": 512,
+            "resnet50": 2048,
+            "resnet101": 2048,
+            "resnet152": 2048,
+            "hrnet_w18": 2048,
+            "hrnet_w18_small_v1": 2048,
+            "hrnet_w18_small_v2": 2048,
+            "hrnet_w30": 2048,
+            "hrnet_w32": 2048,
+            "hrnet_w40": 2048,
+            "hrnet_w44": 2048,
+            "hrnet_w48": 2048,
+            "hrnet_w64": 2048
+        }[cfg['BACKBONE']]
         self.hidden_list = cfg['HIDDEN_LIST']
+        
+        if str(cfg['BACKBONE']).strip().startswith("resnet"):
+            self.preact = ResNet(cfg['BACKBONE'])
+            # Imagenet pretrain model
+            import torchvision.models as tm  # noqa: F401,F403
+            assert cfg['BACKBONE'] in ["resnet18", "resnet34", "resnet50", "resnet101", "resnet152"]
+            x = eval(f"tm.{cfg['BACKBONE']}(pretrained=True)")
+            model_state = self.preact.state_dict()
+            state = {k: v for k, v in x.state_dict().items()
+                    if k in self.preact.state_dict() and v.size() == self.preact.state_dict()[k].size()}
+            model_state.update(state)
+            self.preact.load_state_dict(model_state)
+        elif str(cfg['BACKBONE']).strip().startswith("hrnet"):
+            layertype = str(cfg['BACKBONE']).strip()[6:]
+            self.preact = HighResolutionNet(cfg = cfg_all[layertype])
+            self.preact.init_weights(pretrained = cfg_all[layertype]["pretrained"])
 
-        model_state = self.preact.state_dict()
-        state = {k: v for k, v in x.state_dict().items()
-                 if k in self.preact.state_dict() and v.size() == self.preact.state_dict()[k].size()}
-        model_state.update(state)
-        self.preact.load_state_dict(model_state)
 
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-
         self.fcs, out_channel = self._make_fc_layer()
 
         self.fc_coord = Linear(out_channel, self.num_joints * 2)

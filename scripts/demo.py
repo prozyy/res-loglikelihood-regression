@@ -100,7 +100,7 @@ class RLE:
 if __name__ == "__main__":
 
     model = RLE()
-    image = cv2.imread("test.jpg")
+    image = cv2.imread("assets/test.jpg")
     kpts_24 = model.extract_keypoints(image)
     image_disp = vis_keypoints(image,kpts_24[0].transpose())
     cv2.imwrite("result.jpg",image_disp)
