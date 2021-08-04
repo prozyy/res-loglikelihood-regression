@@ -140,7 +140,8 @@ def get_install_requires():
         'torch>=1.1.0', 'torchvision>=0.3.0',
         'munkres', 'timm==0.1.20', 'natsort'
     ]
-    return install_requires
+    #return install_requires
+    return []
 
 
 def is_installed(package_name):

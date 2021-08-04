@@ -50,7 +50,7 @@ class Mscoco(CustomDataset):
         image_ids = sorted(_coco.getImgIds())
         for entry in _coco.loadImgs(image_ids):
             dirname, filename = entry['coco_url'].split('/')[-2:]
-            abs_path = os.path.join(self._root, dirname, filename)
+            abs_path = os.path.join(self._root, "images", dirname, filename)
             label = self._check_load_keypoints(_coco, entry)
             if not label:
                 continue
