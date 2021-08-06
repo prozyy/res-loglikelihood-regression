@@ -15,7 +15,8 @@
 
 ## TODO
 - [ ] Provide minimal implementation of RLE loss.
-- [ ] Provide implementation on Human3.6M dataset.
+- [ ] Add model zoo.
+- [x] Provide implementation on Human3.6M dataset.
 - [x] Provide implementation on COCO dataset.
 
 ### Installation
@@ -33,35 +34,59 @@ pip install -U 'git+https://github.com/cocodataset/cocoapi.git#subdirectory=Pyth
 ``` bash
 mkdir data
 ```
-5. Download [COCO](https://cocodataset.org/#download) data:
+5. Download [COCO](https://cocodataset.org/#download) data and [Human3.6M](https://drive.google.com/drive/folders/1kgVH-GugrLoc9XyvP6nRoaFpw3TmM5xK) data (from [PoseNet](https://github.com/mks0601/3DMPPE_POSENET_RELEASE) or [ours](https://drive.google.com/file/d/1jh_nnQo2wMFCffGCn8Xh3xvlCVgBuWPZ/view?usp=sharing)):
 ```
 |-- data
 `-- |-- coco
+    |   |-- annotations
+    |   |   |-- person_keypoints_train2017.json
+    |   |   `-- person_keypoints_val2017.json
+    |   `-- images
+    |       |-- train2017
+    |       |   |-- 000000000009.jpg
+    |       |   |-- 000000000025.jpg
+    |       |   |-- 000000000030.jpg
+    |       |   |-- ... 
+    |       `-- val2017
+    |           |-- 000000000139.jpg
+    |           |-- 000000000285.jpg
+    |           |-- 000000000632.jpg
+    |           |-- ... 
+    |-- h36m
     `-- |-- annotations
-        |   |-- person_keypoints_train2017.json
-        |   `-- person_keypoints_val2017.json
+        |   |-- Sample_trainmin_train_Human36M_protocol_2.json
+        |   `-- Sample_64_test_Human36M_protocol_2.json
         `-- images
-            |-- train2017
-            |   |-- 000000000009.jpg
-            |   |-- 000000000025.jpg
-            |   |-- 000000000030.jpg
-            |   |-- ... 
-            `-- val2017
-                |-- 000000000139.jpg
-                |-- 000000000285.jpg
-                |-- 000000000632.jpg
-                |-- ... 
+            |-- s_01_act_02_subact_01_ca_01
+            |   |-- ...
+            |-- s_01_act_02_subact_01_ca_02
+            |   |-- ...
+            `-- ... 
 ```
+## Training
 
-### Train from scratch
+### Train on MSCOCO
 ``` bash
-./scripts/train.sh ./configs/256x192_res50_regress-flow.yaml train_rle
+./scripts/train.sh ./configs/256x192_res50_regress-flow.yaml train_rle_coco
 ```
 
-### Evaluation
+### Train on Human3.6M
+``` bash
+./scripts/train.sh ./configs/256x192_res50_3d_h36mmpii-flow.yaml train_rle_h36m
+```
+
+## Evaluation
+
+### Validate on MSCOCO
 Download the pretrained model from [Google Drive](https://drive.google.com/file/d/1YBHqNKkxIVv8CqgDxkezC-4vyKpx-zXK/view?usp=sharing).
 ``` bash
 ./scripts/validate.sh ./configs/256x192_res50_regress-flow.yaml ./coco-laplace-rle.pth
+```
+
+### Validate on Human3.6M
+Download the pretrained model from [Google Drive](https://drive.google.com/file/d/1v2ZhembnFyJ_FXGHEOCzGaM-tAVFMy7A/view?usp=sharing).
+``` bash
+./scripts/validate.sh ./configs/256x192_res50_3d_h36mmpii-flow.yaml ./h36m-laplace-rle.pth
 ```
 
 ### Citing
