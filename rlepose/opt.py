@@ -48,6 +48,7 @@ parser.add_argument('--flip-shift',
                     help='flip shift',
                     action='store_true')
 parser.add_argument('--valid-batch',
+                    default=32,
                     help='validation batch size',
                     type=int)
 parser.add_argument('--checkpoint',
