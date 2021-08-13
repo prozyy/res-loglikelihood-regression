@@ -192,7 +192,8 @@ cfg_all = {
                 }
             }
         },
-        "pretrained":'./pretrained/hrnetv2_w32_imagenet_pretrained.pth'
+        #"pretrained":'./pretrained/hrnetv2_w32_imagenet_pretrained.pth'
+        "pretrained":'/data/models/pytorch/pose_coco/pose_hrnet_w32_256x192.pth'
     },
     "w40":{
         'MODEL':{

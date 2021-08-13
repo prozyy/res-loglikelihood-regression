@@ -33,13 +33,13 @@ DATA_PRESET:
   - 48
 MODEL:
   TYPE: 'RegressFlow'
-  PRETRAINED: '/data/models/pytorch/pose_coco/pose_resnet_50_256x192.pth.tar'
+  PRETRAINED: ''
   TRY_LOAD: ''
   NUM_FC_FILTERS:
   - -1
   HIDDEN_LIST: -1
   # support resnet18, resnet34, resnet50, resnet101, resnet152, hrnet_w18, hrnet_w18_small_v1, hrnet_w18_small_v2,hrnet_w30,hrnet_w32,hrnet_w40,hrnet_w44,hrnet_w48,hrnet_w64
-  BACKBONE: 'resnet50'
+  BACKBONE: 'hrnet_w32'
   # NUM_LAYERS: 50
 LOSS:
   TYPE: 'RLELoss'

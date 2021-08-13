@@ -1,5 +1,6 @@
 import random
-
+import matplotlib
+matplotlib.use('Agg')
 import torch
 import torch.utils.data as data
 from rlepose.models.builder import DATASET

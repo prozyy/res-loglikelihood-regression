@@ -1,5 +1,8 @@
 import torch.nn as nn
 import torch.nn.functional as F
+import os
+import torch
+import torch.nn as nn
 
 
 def conv3x3(in_planes, out_planes, stride=1, groups=1, dilation=1):
@@ -158,3 +161,23 @@ class ResNet(nn.Module):
                                 norm_layer=self._norm_layer))
 
         return nn.Sequential(*layers)
+        
+    def init_weights(self, pretrained='',):
+        print('=> init weights from normal distribution')
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(
+                    m.weight, mode='fan_out', nonlinearity='relu')
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+        if os.path.isfile(pretrained):
+            pretrained_dict = torch.load(pretrained)
+            print('=> loading pretrained model {}'.format(pretrained))
+            model_dict = self.state_dict()
+            pretrained_dict = {k: v for k, v in pretrained_dict.items()
+                               if k in model_dict.keys()}
+            model_dict.update(pretrained_dict)
+            self.load_state_dict(model_dict)
+        else:
+            print('model file not find {}'.format(pretrained))

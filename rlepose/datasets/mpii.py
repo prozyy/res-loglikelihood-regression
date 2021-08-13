@@ -7,7 +7,9 @@
 import copy
 import os
 import pickle as pk
-
+import matplotlib
+matplotlib.use('Agg')
+import cv2
 import numpy as np
 import scipy.misc
 import torch.utils.data as data
@@ -106,8 +108,9 @@ class Mpii(data.Dataset):
 
         # load ground truth, including bbox, keypoints, image size
         label = copy.deepcopy(self._labels[idx])
-        img = scipy.misc.imread(img_path, mode='RGB')
+        #img = scipy.misc.imread(img_path, mode='RGB')
         # transform ground truth into training label and apply data augmentation
+        img = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB)
         target = self.transformation(img, label)
 
         img = target.pop('image')

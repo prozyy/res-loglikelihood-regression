@@ -127,10 +127,10 @@ class H36m(data.Dataset):
         # load ground truth, including bbox, keypoints, image size
         label = copy.deepcopy(self._labels[idx])
 
-        img = scipy.misc.imread(img_path, mode='RGB')
+        #img = scipy.misc.imread(img_path, mode='RGB')
         # img = load_image(img_path)
         # img = cv2.imread(img_path, cv2.IMREAD_COLOR | cv2.IMREAD_IGNORE_ORIENTATION)
-
+        img = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB)
         # transform ground truth into training label and apply data augmentation
         target = self.transformation(img, label)
         img = target.pop('image')

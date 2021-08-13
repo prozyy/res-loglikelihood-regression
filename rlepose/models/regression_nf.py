@@ -79,11 +79,11 @@ class RegressFlow(nn.Module):
                     if k in self.preact.state_dict() and v.size() == self.preact.state_dict()[k].size()}
             model_state.update(state)
             self.preact.load_state_dict(model_state)
+            self.preact.init_weights(pretrained = cfg['PRETRAINED'])
         elif str(cfg['BACKBONE']).strip().startswith("hrnet"):
             layertype = str(cfg['BACKBONE']).strip()[6:]
             self.preact = HighResolutionNet(cfg = cfg_all[layertype])
             self.preact.init_weights(pretrained = cfg_all[layertype]["pretrained"])
-
 
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.fcs, out_channel = self._make_fc_layer()

@@ -144,7 +144,7 @@ def main_worker(gpu, opt, cfg):
 def preset_model(cfg):
     model = builder.build_sppe(cfg.MODEL, preset_cfg=cfg.DATA_PRESET)
 
-    if cfg.MODEL.PRETRAINED:
+    if cfg.MODEL.PRETRAINED and 0:
         logger.info(f'Loading model from {cfg.MODEL.PRETRAINED}...')
         model.load_state_dict(torch.load(cfg.MODEL.PRETRAINED))
     elif cfg.MODEL.TRY_LOAD:
