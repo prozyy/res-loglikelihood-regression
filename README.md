@@ -68,6 +68,7 @@ mkdir data
 ### Train on MSCOCO
 ``` bash
 ./scripts/train.sh ./configs/256x192_res50_regress-flow.yaml train_rle_coco
+./scripts/train.sh ./configs/256x192_hrnetw32_regress-flow.yaml train_rle
 ```
 
 ### Train on Human3.6M
@@ -82,11 +83,24 @@ Download the pretrained model from [Google Drive](https://drive.google.com/file/
 ``` bash
 ./scripts/validate.sh ./configs/256x192_res50_regress-flow.yaml ./coco-laplace-rle.pth
 ```
+### Results on COCO val2017 with detector having human AP of 56.4 on COCO val2017 dataset(test_det_rcnn.json)
+| Arch               | Input size | #Params | GFLOPs |    AP | Ap .5 | AP .75 | AP (M) | AP (L) |    AR | AR .5 | AR .75 | AR (M) | AR (L) |
+|--------------------|------------|---------|--------|-------|-------|--------|--------|--------|-------|-------|--------|--------|--------|
+| rle_resnet_50      |    256x192 |  23.6M  |  3.73  | 0.693 | 0.878 |  0.764 |  0.666 |  0.748 | 0.744 | 0.915 |  0.809 |  0.706 |  0.802 |
+| rle_resnet_50*     |    256x192 |  23.6M  |  3.73  | 0.709 | 0.889 |  0.776 |  0.677 |  0.769 | 0.760 | 0.925 |  0.819 |  0.719 |  0.819 |
+| rle_hrnet_w32      |    256x192 |  39.3M  |  8.14  | 0.720 | 0.879 |  0.785 |  0.694 |  0.773 | 0.768 | 0.915 |  0.826 |  0.732 |  0.821 |
+| rle_hrnet_w32*     |    256x192 |  39.3M  |  8.14  | 0.750 | 0.896 |  0.816 |  0.716 |  0.810 | 0.798 | 0.933 |  0.857 |  0.757 |  0.858 |
+| pose_hrnet_w32     |    256x192 |  28.5M  |  7.1   | 0.744 | 0.905 |  0.819 |  0.708 |  0.810 | 0.798 | 0.942 |  0.865 |  0.757 |  0.858 |
+
+### Note:
+- Flip test is used.
+- *means pretained Model get from  train Heatmap based method
 
 ### Validate on Human3.6M
 Download the pretrained model from [Google Drive](https://drive.google.com/file/d/1v2ZhembnFyJ_FXGHEOCzGaM-tAVFMy7A/view?usp=sharing).
 ``` bash
 ./scripts/validate.sh ./configs/256x192_res50_3d_h36mmpii-flow.yaml ./h36m-laplace-rle.pth
+# PA-MPJPE 38.481315, Protocol 2 error (MPJPE) >> tot: 48.756247
 ```
 
 ### Citing
